@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ACCENT = "#e8ff47";
 const ACCENT2 = "#ff6b35";
@@ -315,8 +315,8 @@ function PhaseView({ pi, checked, toggle }) {
 
 export default function App() {
   const [tab, setTab] = useState(0);
-  const [checked, setChecked] = useState({});
-  const toggle = (id) => setChecked(c => ({ ...c, [id]: !c[id] }));
+  const [checked, setChecked] = useState(() => { try { return JSON.parse(localStorage.getItem("zts_checked") || "{}"); } catch { return {}; } });
+  const toggle = (id) => setChecked(c => { const next = { ...c, [id]: !c[id] }; try { localStorage.setItem("zts_checked", JSON.stringify(next)); } catch {} return next; });
 
   let allTot = 0, allDon = 0;
   for (let pi = 0; pi < 3; pi++) { allTot += phaseTotal(pi); allDon += phaseDone(pi, checked); }
